@@ -1,0 +1,106 @@
+---
+const links = [
+    { href: "/", label: "Home" },
+    { href: "/about", label: "About" },
+    { href: "/projects", label: "Projects" },
+    { href: "/contact", label: "Contact" },
+];
+
+const current = Astro.url.pathname;
+---
+
+<nav>
+    <div class="nav-inner">
+        <a href="/" class="nav-logo">
+            <span class="mono">&gt;_</span>
+        </a>
+        <ul>
+            {links.map(link => (
+                <li>
+                    <a
+                        href={link.href}
+                        class:list={["nav-link", { active: current === link.href }]}
+                    >
+                        {link.label}
+                    </a>
+                </li>
+            ))}
+        </ul>
+    </div>
+</nav>
+
+<style>
+    nav {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: 100;
+        background: rgba(7, 13, 20, 0.85);
+        backdrop-filter: blur(12px);
+        border-bottom: 1px solid var(--border);
+    }
+
+    .nav-inner {
+        max-width: 1100px;
+        margin: 0 auto;
+        padding: 0 2rem;
+        height: 56px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    .nav-logo {
+        font-family: var(--font-mono);
+        font-size: 1.1rem;
+        color: var(--red);
+        letter-spacing: -0.5px;
+        transition: color 0.2s;
+    }
+
+    .nav-logo:hover {
+        color: #c03030;
+    }
+
+    ul {
+        list-style: none;
+        display: flex;
+        gap: 2rem;
+    }
+
+    .nav-link {
+        font-size: 0.85rem;
+        font-weight: 500;
+        color: var(--text-dim);
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+        transition: color 0.2s;
+        position: relative;
+    }
+
+    .nav-link::after {
+        content: '';
+        position: absolute;
+        bottom: -4px;
+        left: 0;
+        right: 0;
+        height: 1px;
+        background: var(--red);
+        transform: scaleX(0);
+        transition: transform 0.2s;
+    }
+
+    .nav-link:hover {
+        color: var(--text);
+    }
+
+    .nav-link:hover::after,
+    .nav-link.active::after {
+        transform: scaleX(1);
+    }
+
+    .nav-link.active {
+        color: var(--text);
+    }
+</style>

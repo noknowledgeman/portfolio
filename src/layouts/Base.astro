@@ -1,0 +1,85 @@
+---
+import Navbar from "../components/Navbar.astro";
+
+const {title} = Astro.props
+---
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>{title}</title>
+        <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+        <link rel="icon" href="/favicon.ico" />
+        <meta name="generator" content={Astro.generator} />
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+        <style is:global>
+            *, *::before, *::after {
+                box-sizing: border-box;
+                margin: 0;
+                padding: 0;
+            }
+
+            :root {
+                --bg:        #070d14;
+                --bg-2:      #0c1520;
+                --bg-3:      #111e2b;
+                --border:    #1a2d3f;
+                --red:       #7a1f1f;
+                --red-dim:   #4a1515;
+                --red-glow:  rgba(122, 31, 31, 0.15);
+                --text:      #c8d8e8;
+                --text-dim:  #5a7a90;
+                --text-muted:#334455;
+                --accent:    #1e6fa8;
+                --font-sans: 'Inter', system-ui, sans-serif;
+                --font-mono: 'JetBrains Mono', monospace;
+            }
+
+            html {
+                background: var(--bg);
+                color: var(--text);
+                font-family: var(--font-sans);
+                font-size: 16px;
+                line-height: 1.6;
+                -webkit-font-smoothing: antialiased;
+            }
+
+            body {
+                min-height: 100vh;
+                background:
+                    radial-gradient(ellipse 60% 40% at 80% 20%, rgba(122,31,31,0.07) 0%, transparent 70%),
+                    radial-gradient(ellipse 50% 60% at 10% 80%, rgba(122,31,31,0.04) 0%, transparent 70%),
+                    var(--bg);
+            }
+
+            a {
+                color: inherit;
+                text-decoration: none;
+            }
+
+            ::selection {
+                background: var(--red);
+                color: #fff;
+            }
+
+            ::-webkit-scrollbar {
+                width: 6px;
+            }
+            ::-webkit-scrollbar-track {
+                background: var(--bg);
+            }
+            ::-webkit-scrollbar-thumb {
+                background: var(--border);
+                border-radius: 3px;
+            }
+        </style>
+    </head>
+    <body>
+        <Navbar />
+        <main>
+            <slot />
+        </main>
+    </body>
+</html>
