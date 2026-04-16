@@ -1,5 +1,8 @@
 
-# Protfolio
+# Portfolio
+
+- Part of the portfolio in itself is AI generated because I dont care about webdev
+
 
 - Astro is cool
 - https://bruno-simon.com/
