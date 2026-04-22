@@ -1,14 +1,13 @@
 ---
+
 ---
 
 <canvas id="c"></canvas>
 <script>
     /// <reference lib="dom" />
-    
-    import { url } from "../utils/url"
 
     const module = await WebAssembly.instantiateStreaming(
-        fetch(url("wasm/WasmRenderer.wasm")),
+        fetch(`${import.meta.env.BASE_URL}/wasm/WasmRenderer.wasm`),
     );
 
     interface WasmExports extends WebAssembly.Exports {
