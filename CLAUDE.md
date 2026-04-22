@@ -42,7 +42,7 @@ No linting or test setup.
 ## WASM
 
 - Files go in `public/wasm/`
-- Fetched at runtime via `${import.meta.env.BASE_URL}wasm/<file>.wasm`
+- Fetched at runtime via `${import.meta.env.BASE_URL}/wasm/<file>.wasm` — `BASE_URL` = `/portfolio` (no trailing slash), so leading `/` on path required
 - `WasmRenderer.astro` waits for canvas visibility before fetching (IntersectionObserver)
 - Current project: raytracer written in Zig (`WasmRenderer.wasm`)
 

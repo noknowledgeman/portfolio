@@ -22,7 +22,7 @@ const { width = 800 } = Astro.props;
     });
 
     const module = await WebAssembly.instantiateStreaming(
-        fetch(`${import.meta.env.BASE_URL}wasm/WasmRenderer.wasm`),
+        fetch(`${import.meta.env.BASE_URL}/wasm/WasmRenderer.wasm`),
     );
 
     interface WasmExports extends WebAssembly.Exports {
