@@ -2,8 +2,7 @@
 # Portfolio
 
 - Part of the portfolio in itself is AI generated because I dont care about webdev
-- Fuck AI
-
+- I dont love AI so far, but it is a good introduction to claude code
 
 - Astro is cool
 - https://bruno-simon.com/
