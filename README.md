@@ -2,6 +2,7 @@
 # Portfolio
 
 - Part of the portfolio in itself is AI generated because I dont care about webdev
+- Fuck AI
 
 
 - Astro is cool
