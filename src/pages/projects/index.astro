@@ -1,7 +1,8 @@
 ---
-import Base from "../layouts/Base.astro";
-import ProjectCard from "../components/ProjectCard.astro";
-import WasmRenderer from "../components/WasmRenderer.astro";
+import Base from "../../layouts/Base.astro";
+import ProjectCard from "../../components/ProjectCard.astro";
+import WasmRenderer from "../../components/WasmRenderer.astro";
+import { url } from "../../utils/url";
 ---
 
 <Base title="Projects">
@@ -9,9 +10,9 @@ import WasmRenderer from "../components/WasmRenderer.astro";
         <ProjectCard
             title="Raytracer"
             description="Raytracer written in Zig targeting WebAssembly. Follows Raytracing in One Weekend and Raytracing the Next Week, then deviates into its own direction."
-            repoUrl=""
+            href={url("/projects/raytracer")}
         >
-            <WasmRenderer />
+            <WasmRenderer width={300} />
         </ProjectCard>
     </section>
 </Base>
@@ -23,6 +24,6 @@ import WasmRenderer from "../components/WasmRenderer.astro";
         padding: 4rem 2rem;
         display: flex;
         flex-direction: column;
-        gap: 3rem;
+        gap: 2rem;
     }
 </style>

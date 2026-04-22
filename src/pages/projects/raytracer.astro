@@ -1,0 +1,63 @@
+---
+import Base from "../../layouts/Base.astro";
+import WasmRenderer from "../../components/WasmRenderer.astro";
+---
+
+<Base title="Raytracer">
+    <section class="project-page">
+        <div class="project-header">
+            <h1>Raytracer</h1>
+            <p>
+                Raytracer written in Zig targeting WebAssembly. Follows Raytracing in One Weekend
+                and Raytracing the Next Week, then deviates into its own direction.
+            </p>
+            <a href="" class="btn-ghost" target="_blank" rel="noopener">View Source</a>
+        </div>
+        <div class="canvas-wrapper">
+            <WasmRenderer />
+        </div>
+    </section>
+</Base>
+
+<style>
+    .project-page {
+        max-width: 1100px;
+        margin: 0 auto;
+        padding: 4rem 2rem;
+        display: flex;
+        flex-direction: column;
+        gap: 2rem;
+    }
+
+    .project-header {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    h1 {
+        font-size: 2rem;
+        color: var(--text);
+    }
+
+    p {
+        color: var(--text-dim);
+        font-size: 0.95rem;
+        line-height: 1.7;
+        max-width: 60ch;
+    }
+
+    .canvas-wrapper {
+        display: flex;
+        justify-content: center;
+        background: var(--bg-2);
+        border: 1px solid var(--border);
+        border-radius: 6px;
+        padding: 2rem;
+    }
+
+    .canvas-wrapper :global(canvas) {
+        max-width: 100%;
+        height: auto;
+    }
+</style>

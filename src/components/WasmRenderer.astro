@@ -1,12 +1,17 @@
 ---
+interface Props {
+    width?: number;
+}
 
+const { width = 800 } = Astro.props;
 ---
 
-<canvas id="c"></canvas>
+<canvas id="c" data-width={width}></canvas>
 <script>
     /// <reference lib="dom" />
 
     const canvas = document.getElementById("c") as HTMLCanvasElement;
+    const initWidth = Number(canvas.dataset.width);
 
     await new Promise<void>(resolve => {
         new IntersectionObserver(([entry], obs) => {
@@ -33,7 +38,7 @@
     const { init, deinit, getBuffer, getWidth, getHeight, renderLine, memory } =
         module.instance.exports as WasmExports;
 
-    init(800);
+    init(initWidth);
 
     const width = getWidth();
     const height = getHeight();
@@ -61,7 +66,7 @@
         requestAnimationFrame(renderNextLine);
     }
 
-    requestAnimationFrame(renderNextLine)
+    requestAnimationFrame(renderNextLine);
 
     deinit();
 </script>

@@ -2,22 +2,22 @@
 interface Props {
     title: string;
     description: string;
-    repoUrl: string;
+    href: string;
 }
 
-const { title, description, repoUrl } = Astro.props;
+const { title, description, href } = Astro.props;
 ---
 
-<article class="project-card">
+<a class="project-card" href={href}>
     <div class="card-body">
         <h2>{title}</h2>
         <p>{description}</p>
-        <a href={repoUrl} class="btn-ghost" target="_blank" rel="noopener">View Source</a>
+        <span class="btn-ghost">View Project →</span>
     </div>
-    <div class="card-canvas">
+    <div class="card-preview">
         <slot />
     </div>
-</article>
+</a>
 
 <style>
     .project-card {
@@ -28,6 +28,27 @@ const { title, description, repoUrl } = Astro.props;
         border-radius: 6px;
         padding: 2rem;
         background: var(--bg-2);
+        text-decoration: none;
+        transition: border-color 0.2s, background 0.2s;
+    }
+
+    .project-card:hover {
+        border-color: var(--accent);
+        background: var(--bg-3);
+    }
+
+    .card-preview {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: var(--bg-3);
+        border-radius: 4px;
+        overflow: hidden;
+    }
+
+    .card-preview :global(canvas) {
+        max-width: 100%;
+        height: auto;
     }
 
     .card-body {
@@ -47,26 +68,9 @@ const { title, description, repoUrl } = Astro.props;
         line-height: 1.7;
     }
 
-    .card-canvas {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        overflow: hidden;
-        border-radius: 4px;
-        background: var(--bg-3);
-    }
-
-    .card-canvas :global(canvas) {
-        max-width: 100%;
-        height: auto;
-    }
-
     @media (max-width: 700px) {
         .project-card {
             grid-template-columns: 1fr;
-        }
-        .card-canvas {
-            order: -1;
         }
     }
 </style>
