@@ -1,15 +1,28 @@
 ---
-import WasmRenderer from "../components/WasmRenderer.astro";
 import Base from "../layouts/Base.astro";
-
+import ProjectCard from "../components/ProjectCard.astro";
+import WasmRenderer from "../components/WasmRenderer.astro";
 ---
 
 <Base title="Projects">
-    <h1>Raytracing</h1>
-    <p>
-        This is a raytracer written in zig targetting webassembly, it followed the book series Raytracing in one Weekend, and Raytracing the next week 
-        but then deviates into its own direction.
-    </p>
-    <a href="" class="btn-ghost">View Source</a>
-    <WasmRenderer />
+    <section class="projects">
+        <ProjectCard
+            title="Raytracer"
+            description="Raytracer written in Zig targeting WebAssembly. Follows Raytracing in One Weekend and Raytracing the Next Week, then deviates into its own direction."
+            repoUrl=""
+        >
+            <WasmRenderer />
+        </ProjectCard>
+    </section>
 </Base>
+
+<style>
+    .projects {
+        max-width: 1100px;
+        margin: 0 auto;
+        padding: 4rem 2rem;
+        display: flex;
+        flex-direction: column;
+        gap: 3rem;
+    }
+</style>
