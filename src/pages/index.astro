@@ -1,5 +1,6 @@
 ---
 import Base from "../layouts/Base.astro";
+import { url } from "../utils/url";
 ---
 
 <Base title="Home">
@@ -9,8 +10,8 @@ import Base from "../layouts/Base.astro";
             <h1>I love coding</h1>
             <p class="tagline">I suck at coding</p>
             <div class="cta-row">
-                <a href="/projects" class="btn-primary">View Projects</a>
-                <a href="/about" class="btn-ghost">About Me</a>
+                <a href={url("/projects")} class="btn-primary">View Projects</a>
+                <a href={url("/about")} class="btn-ghost">About Me</a>
             </div>
         </div>
         <div class="divider" />

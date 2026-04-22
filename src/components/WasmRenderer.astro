@@ -7,7 +7,7 @@
     /// <reference lib="dom" />
 
     const module = await WebAssembly.instantiateStreaming(
-        fetch("/wasm/WasmRenderer.wasm"),
+        fetch(`${import.meta.env.BASE_URL}wasm/WasmRenderer.wasm`),
     );
 
     interface WasmExports extends WebAssembly.Exports {
