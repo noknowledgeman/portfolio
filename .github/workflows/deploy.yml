@@ -23,10 +23,10 @@ jobs:
         run: gleam deps download
       - name: Build app
         run: gleam run -m lustre/dev build --minify --outdir=dist
-      - name: Make asset paths relative
-        run: sed -i 's|src="/|src="|g' dist/index.html
       - name: Setup Pages
         uses: actions/configure-pages@v5
+      - name: Add index.html
+        run: cp index.html dist/
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
