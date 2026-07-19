@@ -1,3 +1,4 @@
+import config
 import gleam/uri
 import gleam/result
 import modem
@@ -22,6 +23,10 @@ type Msg {
   UserChandedRoute(Route)
 }
 
+/// adds the base path to the front of the path
+fn path(path: String) -> String {
+  config.base_path <> path
+}
 
 fn init(_) -> #(Model, Effect(Msg)) {
   let route = 
@@ -55,10 +60,10 @@ fn update(_model: Model, msg: Msg) -> #(Model, Effect(Msg)) {
 fn view(model: Model) -> Element(Msg) {
   html.div([], [
     html.nav([], [
-      html.a([attribute.href("/")], [html.text("home")]),
-      html.a([attribute.href("projects")], [html.text("projects")]),
-      html.a([attribute.href("about")], [html.text("about")]),
-      html.a([attribute.href("contact")], [html.text("contact")]),
+      html.a([attribute.href(path(""))], [html.text("home")]),
+      html.a([attribute.href(path("projects"))], [html.text("projects")]),
+      html.a([attribute.href(path("about"))], [html.text("about")]),
+      html.a([attribute.href(path("contact"))], [html.text("contact")]),
     ]),
     
     case model {
