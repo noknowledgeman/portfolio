@@ -1,3 +1,4 @@
+import gleam/string
 import config
 import gleam/uri
 import gleam/result
@@ -29,8 +30,9 @@ fn path(path: String) -> String {
 }
 
 fn strip_base(segments: List(String)) -> List(String) {
+  let base = string.replace(config.base_path, "/", "")
   case segments {
-    [first, ..rest] if first == config.base_path -> rest
+    [first, ..rest] if first == base -> rest
     _ -> segments
   }
 }
