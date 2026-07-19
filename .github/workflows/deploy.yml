@@ -12,7 +12,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
       - name: Set up Gleam
         uses: erlef/setup-beam@v1
         with:
@@ -23,6 +23,8 @@ jobs:
         run: gleam deps download
       - name: Build app
         run: gleam run -m lustre/dev build --minify --outdir=dist
+      - name: Make asset paths relative
+        run: sed -i 's|src="/|src="|g' dist/index.html
       - name: Setup Pages
         uses: actions/configure-pages@v5
       - name: Upload artifact
