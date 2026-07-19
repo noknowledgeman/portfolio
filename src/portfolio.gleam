@@ -66,11 +66,11 @@ fn uri_to_route(uri: uri.Uri) -> Route {
 }
 
 fn on_url_change(uri: uri.Uri) -> Msg {
-  echo uri.path_segments(uri.path)
+  echo strip_base(uri.path_segments(uri.path))
   UserChandedRoute(uri_to_route(uri))
 }
 
-fn update(model: Model, msg: Msg) -> #(Model, Effect(Msg)) {
+fn update(_model: Model, msg: Msg) -> #(Model, Effect(Msg)) {
   case msg {
     UserChandedRoute(route) -> #(route, effect.none())
   }
