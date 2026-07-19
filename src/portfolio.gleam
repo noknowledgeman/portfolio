@@ -18,6 +18,15 @@ type Route {
   Contact
 }
 
+fn route_debug(route: Route) -> String {
+  case route {
+    Home -> "home"
+    Projects -> "projects"
+    About -> "about"
+    Contact -> "contact"
+  }
+}
+
 type Model = Route
 
 type Msg {
@@ -57,16 +66,18 @@ fn uri_to_route(uri: uri.Uri) -> Route {
 }
 
 fn on_url_change(uri: uri.Uri) -> Msg {
+  echo uri.path_segments(uri.path)
   UserChandedRoute(uri_to_route(uri))
 }
 
-fn update(_model: Model, msg: Msg) -> #(Model, Effect(Msg)) {
+fn update(model: Model, msg: Msg) -> #(Model, Effect(Msg)) {
   case msg {
     UserChandedRoute(route) -> #(route, effect.none())
   }
 }
 
 fn view(model: Model) -> Element(Msg) {
+  echo model
   html.div([], [
     html.nav([], [
       html.a([attribute.href(path(""))], [html.text("home")]),
