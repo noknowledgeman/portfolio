@@ -28,6 +28,13 @@ fn path(path: String) -> String {
   config.base_path <> path
 }
 
+fn strip_base(segments: List(String)) -> List(String) {
+  case segments {
+    [first, ..rest] if first == config.base_path -> rest
+    _ -> segments
+  }
+}
+
 fn init(_) -> #(Model, Effect(Msg)) {
   let route = 
     case modem.initial_uri() 
@@ -39,7 +46,7 @@ fn init(_) -> #(Model, Effect(Msg)) {
 }
 
 fn uri_to_route(uri: uri.Uri) -> Route {
-  case uri.path_segments(uri.path) {
+  case strip_base(uri.path_segments(uri.path)) {
     ["about"] -> About
     ["contact"] -> Contact
     ["projects"] -> Projects // TODO: make this a sub thing
