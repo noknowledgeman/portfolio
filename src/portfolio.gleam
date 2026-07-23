@@ -1,3 +1,4 @@
+import about
 import grille_pain
 import grille_pain/lustre/toast
 import contact
@@ -62,10 +63,6 @@ fn home_view() -> Element(Msg) {
   html.div([], [html.text("Oscar Weimann")])
 }
 
-fn about_view() -> Element(Msg) {
-  html.div([], [html.h1([], [html.text("About")])])
-}
-
 fn projects_view() -> Element(Msg) {
   html.div([], [html.h1([], [html.text("Projects")])])
 }
@@ -76,6 +73,7 @@ fn not_found_view(uri: uri.Uri) -> Element(Msg) {
 
 fn view(model: Model) -> Element(Msg) {
   html.div([], [
+    // TODO: refactor
     html.nav([attribute.class("flex flex-row justify-between p-2 m-2")], [
       html.a([router.href(router.Home)], [html.text("home")]),
       html.a([router.href(router.Projects)], [html.text("projects")]),
@@ -86,7 +84,7 @@ fn view(model: Model) -> Element(Msg) {
     case model {
       HomePage -> home_view()
       ContactPage -> contact.view() |> element.map(Contact)
-      AboutPage -> about_view()
+      AboutPage -> about.view()
       ProjectsPage -> projects_view()
       NotFoundPage(uri) -> not_found_view(uri)
     },
