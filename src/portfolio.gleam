@@ -1,127 +1,102 @@
-import config
-import gleam/result
-import gleam/string
+import grille_pain
+import grille_pain/lustre/toast
+import contact
+import router.{type Route}
 import gleam/uri
 import lustre
 import lustre/effect.{type Effect}
 import lustre/element.{type Element}
-import lustre/attribute.{type Attribute}
+import lustre/attribute
 import lustre/element/html
 import modem
 
-pub type Route {
-  Home
-  Projects
-  About
-  Contact
-  NotFound(uri: uri.Uri)
+pub type Model {
+  HomePage
+  AboutPage
+  ProjectsPage
+  ContactPage
+  NotFoundPage(uri: uri.Uri)
 }
-
-pub type Model =
-  Route
 
 type Msg {
   UserChangedRoute(Route)
+  Contact(contact.Msg)
 }
 
-/// adds the base path to the front of the path
-fn path(path: String) -> String {
-  config.base_path <> path
-}
-
-fn strip_base(segments: List(String)) -> List(String) {
-  let base = string.replace(config.base_path, "/", "")
-  case segments {
-    [first, ..rest] if first == base -> rest
-    _ -> segments
+fn init_route(route: Route) -> Model {
+  case route {
+    router.Home -> HomePage
+    router.About -> AboutPage
+    router.Projects -> ProjectsPage
+    router.Contact -> ContactPage
+    router.NotFound(uri) -> NotFoundPage(uri)
   }
-}
-
-fn parse_route(uri: uri.Uri) -> Route {
-  case strip_base(uri.path_segments(uri.path)) {
-    [] | [""] -> Home
-    ["about"] -> About
-    ["contact"] -> Contact
-    ["projects"] -> Projects
-    _ -> NotFound(uri:)
-  }
-}
-
-fn href(route: Route) -> Attribute(Msg) {
-  let url = case route {
-    Home -> path("")
-    About -> path("about")
-    Projects -> path("projects")
-    Contact -> path("contact")
-    NotFound(_) -> path("404")
-  }
-
-  attribute.href(url)
 }
 
 fn init(_) -> #(Model, Effect(Msg)) {
   let route = case
-    modem.initial_uri()
-    |> result.map(parse_route)
-  {
-    Ok(a) -> a
-    Error(_) -> Home
+    modem.initial_uri() {
+    Ok(uri) -> init_route(router.parse_route(uri))
+    Error(_) -> HomePage
   }
   #(route, modem.init(fn (uri) {
     uri
-    |> parse_route
+    |> router.parse_route
     |> UserChangedRoute
   }))
 }
 
-fn update(_model: Model, msg: Msg) -> #(Model, Effect(Msg)) {
-  case msg {
-    UserChangedRoute(route) -> #(route, effect.none())
+fn update(model: Model, msg: Msg) -> #(Model, Effect(Msg)) {
+  case msg, model {
+    UserChangedRoute(route), _ -> #(init_route(route), effect.none())
+    Contact(msg), ContactPage -> {
+      contact.update(msg)
+      // TODO: I dont love this but it works, I need to refactor later
+      #(model, toast.toast("Copied!"))
+    }
+    _, _ -> #(model, effect.none())
   }
 }
 
-fn home_view(_model: Model) -> Element(Msg) {
+fn home_view() -> Element(Msg) {
   html.div([], [html.text("Oscar Weimann")])
 }
 
-fn contact_view(_model: Model) -> Element(Msg) {
-  html.div([], [html.h1([], [html.text("Contact")])])
-}
-
-fn about_view(_model: Model) -> Element(Msg) {
+fn about_view() -> Element(Msg) {
   html.div([], [html.h1([], [html.text("About")])])
 }
 
-fn projects_view(_model: Model) -> Element(Msg) {
+fn projects_view() -> Element(Msg) {
   html.div([], [html.h1([], [html.text("Projects")])])
 }
 
-fn not_found_view(_model: Model, uri: uri.Uri) -> Element(Msg) {
+fn not_found_view(uri: uri.Uri) -> Element(Msg) {
   html.div([], [html.h1([], [html.text("Page " <> uri.path <> " not found" )])])
 }
 
 fn view(model: Model) -> Element(Msg) {
   html.div([], [
     html.nav([attribute.class("flex flex-row justify-between p-2 m-2")], [
-      html.a([href(Home)], [html.text("home")]),
-      html.a([href(Projects)], [html.text("projects")]),
-      html.a([href(About)], [html.text("about")]),
-      html.a([href(Contact)], [html.text("contact")]),
+      html.a([router.href(router.Home)], [html.text("home")]),
+      html.a([router.href(router.Projects)], [html.text("projects")]),
+      html.a([router.href(router.About)], [html.text("about")]),
+      html.a([router.href(router.Contact)], [html.text("contact")]),
     ]),
 
     case model {
-      Home -> home_view(model)
-      Contact -> contact_view(model)
-      About -> about_view(model)
-      Projects -> projects_view(model)
-      NotFound(uri) -> not_found_view(model, uri)
+      HomePage -> home_view()
+      ContactPage -> contact.view() |> element.map(Contact)
+      AboutPage -> about_view()
+      ProjectsPage -> projects_view()
+      NotFoundPage(uri) -> not_found_view(uri)
     },
   ])
 }
 
 pub fn main() -> Nil {
-  let app = lustre.application(init, update, view)
-  let assert Ok(_) = lustre.start(app, "#app", Nil)
+  let assert Ok(_) = grille_pain.simple()
+  let assert Ok(_) = lustre.application(init, update, view)
+    |> lustre.start("#app", Nil)
 
   Nil
 }
