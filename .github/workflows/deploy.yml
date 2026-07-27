@@ -27,10 +27,6 @@ jobs:
         run: gleam run -m lustre/dev build --minify --outdir=dist
       - name: Setup Pages
         uses: actions/configure-pages@v5
-      - name: Add index.html
-        run: cp index.html dist/
-      - name: Add 404.html
-        run: cp 404.html dist/
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:

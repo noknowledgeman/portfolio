@@ -1,3 +1,5 @@
+import styles
+import sketch
 import about
 import grille_pain
 import grille_pain/lustre/toast
@@ -7,9 +9,9 @@ import gleam/uri
 import lustre
 import lustre/effect.{type Effect}
 import lustre/element.{type Element}
-import lustre/attribute
-import lustre/element/html
+import sketch/lustre/element/html
 import modem
+import sketch/lustre as sketch_lustre
 
 pub type Model {
   HomePage
@@ -60,25 +62,26 @@ fn update(model: Model, msg: Msg) -> #(Model, Effect(Msg)) {
 }
 
 fn home_view() -> Element(Msg) {
-  html.div([], [html.text("Oscar Weimann")])
+  html.div_([], [html.text("Oscar Weimann")])
 }
 
 fn projects_view() -> Element(Msg) {
-  html.div([], [html.h1([], [html.text("Projects")])])
+  html.div_([], [html.h1_([], [html.text("Projects")])])
 }
 
 fn not_found_view(uri: uri.Uri) -> Element(Msg) {
-  html.div([], [html.h1([], [html.text("Page " <> uri.path <> " not found" )])])
+  html.div_([], [html.h1_([], [html.text("Page " <> uri.path <> " not found" )])])
 }
 
-fn view(model: Model) -> Element(Msg) {
-  html.div([], [
+fn view(model: Model, stylesheet: sketch.StyleSheet) -> Element(Msg) {
+  use <- sketch_lustre.render(stylesheet, [sketch_lustre.node()])
+  html.div_([], [
     // TODO: refactor
-    html.nav([attribute.class("flex flex-row justify-between p-2 m-2")], [
-      html.a([router.href(router.Home)], [html.text("home")]),
-      html.a([router.href(router.Projects)], [html.text("projects")]),
-      html.a([router.href(router.About)], [html.text("about")]),
-      html.a([router.href(router.Contact)], [html.text("contact")]),
+    html.nav_([], [
+      html.a_([router.href(router.Home)], [html.text("home")]),
+      html.a_([router.href(router.Projects)], [html.text("projects")]),
+      html.a_([router.href(router.About)], [html.text("about")]),
+      html.a_([router.href(router.Contact)], [html.text("contact")]),
     ]),
 
     case model {
@@ -91,9 +94,11 @@ fn view(model: Model) -> Element(Msg) {
   ])
 }
 
+
 pub fn main() -> Nil {
+  let assert Ok(stylesheet) = sketch_lustre.construct(styles.global)
   let assert Ok(_) = grille_pain.simple()
-  let assert Ok(_) = lustre.application(init, update, view)
+  let assert Ok(_) = lustre.application(init, update, view(_, stylesheet))
     |> lustre.start("#app", Nil)
 
   Nil

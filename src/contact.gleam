@@ -1,5 +1,5 @@
 import lustre/event
-import lustre/element/html
+import sketch/lustre/element/html
 import lustre/element.{type Element}
 import gleam/javascript/promise.{type Promise}
 
@@ -25,9 +25,9 @@ pub fn update(msg: Msg) {
 }
 
 pub fn view() -> Element(Msg) {
-  html.div([], [
-    html.text("Contact"),
-    html.p([], [html.text("WOlrd")]),
-    html.p([event.on_click(UserPressedEmail)], [html.text("Email: oslewei@gmx.de")])
+  html.div_([], [
+    html.h1_([], [html.text("Contact")]),
+    html.p_([], [html.text("WOlrd")]),
+    html.p_([event.on_click(UserPressedEmail)], [html.text("Email: oslewei@gmx.de")])
   ])
 }
