@@ -1,5 +1,5 @@
-import gleam/string
 import config
+import gleam/string
 import gleam/uri
 import lustre/attribute.{type Attribute}
 

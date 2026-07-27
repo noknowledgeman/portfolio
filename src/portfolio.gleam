@@ -1,14 +1,14 @@
-import projects/projects
-import home
 import about
 import contact
 import gleam/uri
 import grille_pain
 import grille_pain/lustre/toast
+import home
 import lustre
 import lustre/effect.{type Effect}
 import lustre/element.{type Element}
 import modem
+import projects/projects
 import router.{type Route}
 import sketch
 import sketch/css
@@ -16,7 +16,7 @@ import sketch/lustre as sketch_lustre
 import sketch/lustre/element/html
 import styles
 
-pub type Model {
+pub type Page {
   HomePage
   AboutPage
   ProjectsPage
@@ -24,12 +24,21 @@ pub type Model {
   NotFoundPage(uri: uri.Uri)
 }
 
+pub type ColourMode {
+  Dark
+  Light
+}
+
+pub type Model {
+  Model(page: Page, colour_mode: ColourMode)
+}
+
 type Msg {
   UserChangedRoute(Route)
   Contact(contact.Msg)
 }
 
-fn init_route(route: Route) -> Model {
+fn init_route(route: Route) -> Page {
   case route {
     router.Home -> HomePage
     router.About -> AboutPage
@@ -40,12 +49,13 @@ fn init_route(route: Route) -> Model {
 }
 
 fn init(_) -> #(Model, Effect(Msg)) {
-  let route = case modem.initial_uri() {
+  let page = case modem.initial_uri() {
     Ok(uri) -> init_route(router.parse_route(uri))
     Error(_) -> HomePage
   }
   #(
-    route,
+    // Change to user preference? 
+    Model(page, Light),
     modem.init(fn(uri) {
       uri
       |> router.parse_route
@@ -55,8 +65,8 @@ fn init(_) -> #(Model, Effect(Msg)) {
 }
 
 fn update(model: Model, msg: Msg) -> #(Model, Effect(Msg)) {
-  case msg, model {
-    UserChangedRoute(route), _ -> #(init_route(route), effect.none())
+  case msg, model.page {
+    UserChangedRoute(route), _ -> #(Model(..model, page: init_route(route)), effect.none())
     Contact(msg), ContactPage -> {
       contact.update(msg)
       // TODO: I dont love this but it works, I need to refactor later
@@ -66,33 +76,34 @@ fn update(model: Model, msg: Msg) -> #(Model, Effect(Msg)) {
   }
 }
 
-
-
 fn not_found_view(uri: uri.Uri) -> Element(Msg) {
   html.div_([], [html.h1_([], [html.text("Page " <> uri.path <> " not found")])])
+}
+
+fn navbar() -> Element(Msg) {
+  html.nav(
+    css.class([
+      css.display("flex"),
+      css.flex_direction("row"),
+      css.justify_content("space-between"),
+      css.align_items("center"),
+    ]),
+    [],
+    [
+      html.a_([router.href(router.Home)], [html.text("home")]),
+      html.a_([router.href(router.Projects)], [html.text("projects")]),
+      html.a_([router.href(router.About)], [html.text("about")]),
+      html.a_([router.href(router.Contact)], [html.text("contact")]),
+    ],
+  )
 }
 
 fn view(model: Model, stylesheet: sketch.StyleSheet) -> Element(Msg) {
   use <- sketch_lustre.render(stylesheet, [sketch_lustre.node()])
   html.div_([], [
-    // TODO: refactor
-    html.nav(
-      css.class([
-        css.display("flex"),
-        css.flex_direction("row"),
-        css.justify_content("space-between"),
-        css.align_items("center"),
-      ]),
-      [],
-      [
-        html.a_([router.href(router.Home)], [html.text("home")]),
-        html.a_([router.href(router.Projects)], [html.text("projects")]),
-        html.a_([router.href(router.About)], [html.text("about")]),
-        html.a_([router.href(router.Contact)], [html.text("contact")]),
-      ],
-    ),
-
-    case model {
+    navbar(),
+    
+    case model.page {
       HomePage -> home.view()
       ContactPage -> contact.view() |> element.map(Contact)
       AboutPage -> about.view()

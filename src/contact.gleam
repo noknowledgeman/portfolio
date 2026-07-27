@@ -1,7 +1,7 @@
+import gleam/javascript/promise.{type Promise}
+import lustre/element.{type Element}
 import lustre/event
 import sketch/lustre/element/html
-import lustre/element.{type Element}
-import gleam/javascript/promise.{type Promise}
 
 pub type Msg {
   UserPressedEmail
@@ -27,6 +27,8 @@ pub fn update(msg: Msg) {
 pub fn view() -> Element(Msg) {
   html.div_([], [
     html.h1_([], [html.text("Contact")]),
-    html.p_([event.on_click(UserPressedEmail)], [html.text("Email: oslewei@gmx.de")])
+    html.p_([event.on_click(UserPressedEmail)], [
+      html.text("Email: oslewei@gmx.de"),
+    ]),
   ])
 }

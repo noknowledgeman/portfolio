@@ -13,6 +13,7 @@ sketch_lustre = ">= 3.1.2 and < 4.0.0"
 
 [dev_dependencies]
 lustre_dev_tools = ">= 2.3.6 and < 3.0.0"
+lucide_lustre = ">= 2.0.3 and < 3.0.0"
 
 [tools.lustre.build]
 no_html = true
