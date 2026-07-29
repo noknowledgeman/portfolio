@@ -1,9 +1,11 @@
+import lustre/event
 import about
 import contact
 import gleam/uri
 import grille_pain
 import grille_pain/lustre/toast
 import home
+import lucide_lustre
 import lustre
 import lustre/effect.{type Effect}
 import lustre/element.{type Element}
@@ -36,6 +38,7 @@ pub type Model {
 type Msg {
   UserChangedRoute(Route)
   Contact(contact.Msg)
+  UserToggledColourMode
 }
 
 fn init_route(route: Route) -> Page {
@@ -66,13 +69,20 @@ fn init(_) -> #(Model, Effect(Msg)) {
 
 fn update(model: Model, msg: Msg) -> #(Model, Effect(Msg)) {
   case msg, model.page {
-    UserChangedRoute(route), _ -> #(Model(..model, page: init_route(route)), effect.none())
+    UserChangedRoute(route), _ -> #(
+      Model(..model, page: init_route(route)),
+      effect.none(),
+    )
     Contact(msg), ContactPage -> {
       contact.update(msg)
       // TODO: I dont love this but it works, I need to refactor later
       #(model, toast.toast("Copied!"))
     }
-    _, _ -> #(model, effect.none())
+    UserToggledColourMode, _ -> #(Model(..model, colour_mode: case model.colour_mode {
+      Light -> Dark
+      Dark -> Light
+    }), effect.none())
+    _, _ -> panic as "This is not right"
   }
 }
 
@@ -80,7 +90,16 @@ fn not_found_view(uri: uri.Uri) -> Element(Msg) {
   html.div_([], [html.h1_([], [html.text("Page " <> uri.path <> " not found")])])
 }
 
-fn navbar() -> Element(Msg) {
+fn light_mode_button(model: Model) -> Element(Msg) {
+  html.button(css.class([]), [event.on_click(UserToggledColourMode)], [
+    case model.colour_mode {
+      Light -> lucide_lustre.moon([])
+      Dark -> lucide_lustre.sun([])
+    }
+  ])
+}
+
+fn navbar(model: Model) -> Element(Msg) {
   html.nav(
     css.class([
       css.display("flex"),
@@ -94,6 +113,7 @@ fn navbar() -> Element(Msg) {
       html.a_([router.href(router.Projects)], [html.text("projects")]),
       html.a_([router.href(router.About)], [html.text("about")]),
       html.a_([router.href(router.Contact)], [html.text("contact")]),
+      light_mode_button(model)
     ],
   )
 }
@@ -101,8 +121,8 @@ fn navbar() -> Element(Msg) {
 fn view(model: Model, stylesheet: sketch.StyleSheet) -> Element(Msg) {
   use <- sketch_lustre.render(stylesheet, [sketch_lustre.node()])
   html.div_([], [
-    navbar(),
-    
+    navbar(model),
+
     case model.page {
       HomePage -> home.view()
       ContactPage -> contact.view() |> element.map(Contact)
