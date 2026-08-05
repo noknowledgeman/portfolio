@@ -1,4 +1,3 @@
-import lustre/event
 import about
 import contact
 import gleam/uri
@@ -9,6 +8,7 @@ import lucide_lustre
 import lustre
 import lustre/effect.{type Effect}
 import lustre/element.{type Element}
+import lustre/event
 import modem
 import projects/projects
 import router.{type Route}
@@ -26,19 +26,30 @@ pub type Page {
   NotFoundPage(uri: uri.Uri)
 }
 
+//  current state
 pub type ColourMode {
-  Dark
+  // lazy but true is dark and false is light
+  System(is_dark: Bool)
   Light
+  Dark
 }
 
 pub type Model {
   Model(page: Page, colour_mode: ColourMode)
 }
 
-type Msg {
+pub type Msg {
   UserChangedRoute(Route)
   Contact(contact.Msg)
   UserToggledColourMode
+  SystemThemeChanged(is_dark: Bool)
+}
+
+fn watch_scheme() -> Effect(Msg) {
+  effect.from(fn(dispatch) {
+    use is_dark <- styles.on_scheme_change
+    dispatch(SystemThemeChanged(is_dark))
+  })
 }
 
 fn init_route(route: Route) -> Page {
@@ -58,16 +69,20 @@ fn init(_) -> #(Model, Effect(Msg)) {
   }
   #(
     // Change to user preference? 
-    Model(page, Light),
-    modem.init(fn(uri) {
-      uri
-      |> router.parse_route
-      |> UserChangedRoute
-    }),
+    Model(page, System(styles.prefers_dark())),
+    effect.batch([
+      modem.init(fn(uri) {
+        uri
+        |> router.parse_route
+        |> UserChangedRoute
+      }),
+      watch_scheme(),
+    ]),
   )
 }
 
 fn update(model: Model, msg: Msg) -> #(Model, Effect(Msg)) {
+  echo model
   case msg, model.page {
     UserChangedRoute(route), _ -> #(
       Model(..model, page: init_route(route)),
@@ -78,11 +93,20 @@ fn update(model: Model, msg: Msg) -> #(Model, Effect(Msg)) {
       // TODO: I dont love this but it works, I need to refactor later
       #(model, toast.toast("Copied!"))
     }
-    UserToggledColourMode, _ -> #(Model(..model, colour_mode: case model.colour_mode {
-      Light -> Dark
-      Dark -> Light
-    }), effect.none())
-    _, _ -> panic as "This is not right"
+    UserToggledColourMode, _ -> #(
+      Model(..model, colour_mode: case model.colour_mode {
+        Light | System(False) -> {
+          styles.set_attribute("data-theme", "dark")
+          Dark
+        }
+        Dark | System(True) -> {
+          styles.set_attribute("data-theme", "light")
+          Light
+        }
+      }),
+      effect.none(),
+    )
+    _, _ -> panic as "what the fuck"
   }
 }
 
@@ -93,9 +117,9 @@ fn not_found_view(uri: uri.Uri) -> Element(Msg) {
 fn light_mode_button(model: Model) -> Element(Msg) {
   html.button(css.class([]), [event.on_click(UserToggledColourMode)], [
     case model.colour_mode {
-      Light -> lucide_lustre.moon([])
-      Dark -> lucide_lustre.sun([])
-    }
+      Light | System(False) -> lucide_lustre.moon([])
+      Dark | System(True) -> lucide_lustre.sun([])
+    },
   ])
 }
 
@@ -113,7 +137,7 @@ fn navbar(model: Model) -> Element(Msg) {
       html.a_([router.href(router.Projects)], [html.text("projects")]),
       html.a_([router.href(router.About)], [html.text("about")]),
       html.a_([router.href(router.Contact)], [html.text("contact")]),
-      light_mode_button(model)
+      light_mode_button(model),
     ],
   )
 }

@@ -16,3 +16,16 @@ export async function writeText(clipText) {
     return Result$Error(error.toString());
   }
 }
+
+export function prefersDark() {
+  return window.matchMedia("(prefers-color-scheme: dark)").matches
+}
+
+export function onSchemeChange(callback) {
+  const mq = window.matchMedia("(prefers-color-scheme: dark)");
+  mq.addEventListener("change", (e) => callback(e.matches));
+}
+
+export function setAttribute(attrib, state) {
+  document.documentElement.setAttribute(attrib, state)
+}
