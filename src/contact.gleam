@@ -1,3 +1,4 @@
+import sketch/css
 import gleam/javascript/promise.{type Promise}
 import lustre/element.{type Element}
 import lustre/event
@@ -17,7 +18,7 @@ pub fn write_text(clip_text: String) -> Promise(Result(Nil, String))
 pub fn update(msg: Msg) {
   case msg {
     UserPressedEmail -> {
-      let _ = write_text("oslewei@gmx.de")
+      let _ = write_text("oslewei@proton.me")
 
       Nil
     }
@@ -27,8 +28,13 @@ pub fn update(msg: Msg) {
 pub fn view() -> Element(Msg) {
   html.div_([], [
     html.h1_([], [html.text("Contact")]),
-    html.p_([event.on_click(UserPressedEmail)], [
-      html.text("Email: oslewei@gmx.de"),
-    ]),
+    html.p_([], [
+      html.text("Email: "),
+      html.span(css.class([
+        css.cursor("pointer")
+      ]), [event.on_click(UserPressedEmail)], [
+        html.text("oslewei@proton.me"),
+      ]),
+    ])
   ])
 }

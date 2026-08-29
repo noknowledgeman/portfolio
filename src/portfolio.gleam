@@ -1,3 +1,4 @@
+import lustre/attribute
 import about
 import contact
 import gleam/uri

@@ -1,6 +1,5 @@
 //// global styles
 
-import lustre/effect
 import sketch/css/media
 import sketch
 import sketch/css
@@ -32,6 +31,11 @@ pub fn global(stylesheet: sketch.StyleSheet) -> sketch.StyleSheet {
   |> sketch.global(
     css.global("[data-theme=\"dark\"]", [
       css.background_color(dark_background_color)
+    ])
+  )
+  |> sketch.global(
+    css.global("[data-theme=\"light\"]", [
+      css.background_color(background_color)
     ])
   )
 }
