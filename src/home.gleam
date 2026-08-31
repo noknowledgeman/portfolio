@@ -8,7 +8,7 @@ pub fn view() -> Element(a) {
   html.section_([attribute.id("home")], [
     html.h1_([], [html.text("Oscar Weimann")]),
     html.div_([], [
-      html.a_([attribute.href("https://github.com/noknowledgeman")], [icons.github()]),
+      html.a_([attribute.href("https://github.com/oslewei")], [icons.github()]),
     ]),
     // TODO: do the github and othe rprofiles: github, linkedin
     // hack the box, and so on
