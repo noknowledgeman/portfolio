@@ -1,5 +1,10 @@
-/// From the plinth
+import { loremIpsum } from "https://esm.sh/lorem-ipsum@3";
 import { Result$Ok, Result$Error } from "./gleam.mjs";
+
+/// Lorem ipsium generator
+export function loremIpsumGleam(count, units) {
+  return loremIpsum({count, units})
+}
 
 export async function readText() {
   try {

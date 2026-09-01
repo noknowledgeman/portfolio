@@ -60,10 +60,6 @@ fn update(model: Model, msg: Msg) -> #(Model, Effect(Msg)) {
   }
 }
 
-fn not_found_view(uri: uri.Uri) -> Element(Msg) {
-  html.div_([], [html.h1_([], [html.text("Page " <> uri.path <> " not found")])])
-}
-
 fn light_mode_button(model: Model) -> Element(Msg) {
   html.button(css.class([]), [event.on_click(UserToggledColourMode)], [
     case model.colour_mode {

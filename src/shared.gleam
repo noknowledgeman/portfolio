@@ -15,3 +15,6 @@ pub type Msg {
   UserPressedEmail
   SystemThemeChanged(is_dark: Bool)
 }
+
+@external(javascript, "./browser_ffi.mjs", "loremIpsumGleam")
+pub fn lorem_ipsum(count: Int, units: String) -> String
