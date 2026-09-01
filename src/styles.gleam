@@ -1,5 +1,6 @@
 //// global styles
 
+import sketch/css/length
 import sketch/css/media
 import sketch
 import sketch/css
@@ -22,6 +23,7 @@ pub fn global(stylesheet: sketch.StyleSheet) -> sketch.StyleSheet {
   |> sketch.global(
     css.global(":root", [
       css.font_family("\"IBM Plex Sans\", sans-serif"),
+      css.scroll_behavior("smooth"),
       css.background_color(background_color),
       css.media(media.dark_theme(), [
         css.background_color(dark_background_color)
@@ -36,6 +38,13 @@ pub fn global(stylesheet: sketch.StyleSheet) -> sketch.StyleSheet {
   |> sketch.global(
     css.global("[data-theme=\"light\"]", [
       css.background_color(background_color)
+    ])
+  )
+  |> sketch.global(
+    css.global("section", [
+      css.height(length.vh(100)),
+      css.display("flex"),
+      css.justify_content("center")
     ])
   )
 }

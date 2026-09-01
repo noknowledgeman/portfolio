@@ -1,50 +1,22 @@
 import lustre/attribute
 import about
-import contact
 import gleam/uri
 import grille_pain
-import grille_pain/lustre/toast
-import home
 import lucide_lustre
 import lustre
 import lustre/effect.{type Effect}
 import lustre/element.{type Element}
 import lustre/event
-import modem
-import projects/projects
-import router.{type Route}
 import sketch
 import sketch/css
 import sketch/lustre as sketch_lustre
 import sketch/lustre/element/html
 import styles
+import contact
 
-pub type Page {
-  HomePage
-  AboutPage
-  ProjectsPage
-  ContactPage
-  NotFoundPage(uri: uri.Uri)
-}
+import shared.{type Msg, type Model, 
+  SystemThemeChanged, Model, System, UserToggledColourMode, Light, Dark, UserPressedEmail}
 
-//  current state
-pub type ColourMode {
-  // lazy but true is dark and false is light
-  System(is_dark: Bool)
-  Light
-  Dark
-}
-
-pub type Model {
-  Model(page: Page, colour_mode: ColourMode)
-}
-
-pub type Msg {
-  UserChangedRoute(Route)
-  Contact(contact.Msg)
-  UserToggledColourMode
-  SystemThemeChanged(is_dark: Bool)
-}
 
 fn watch_scheme() -> Effect(Msg) {
   effect.from(fn(dispatch) {
@@ -53,49 +25,20 @@ fn watch_scheme() -> Effect(Msg) {
   })
 }
 
-fn init_route(route: Route) -> Page {
-  case route {
-    router.Home -> HomePage
-    router.About -> AboutPage
-    router.Projects -> ProjectsPage
-    router.Contact -> ContactPage
-    router.NotFound(uri) -> NotFoundPage(uri)
-  }
-}
-
 fn init(_) -> #(Model, Effect(Msg)) {
-  let page = case modem.initial_uri() {
-    Ok(uri) -> init_route(router.parse_route(uri))
-    Error(_) -> HomePage
-  }
   #(
     // Change to user preference? 
-    Model(page, System(styles.prefers_dark())),
+    Model(System(styles.prefers_dark())),
     effect.batch([
-      modem.init(fn(uri) {
-        uri
-        |> router.parse_route
-        |> UserChangedRoute
-      }),
       watch_scheme(),
     ]),
   )
 }
 
 fn update(model: Model, msg: Msg) -> #(Model, Effect(Msg)) {
-  echo model
-  case msg, model.page {
-    UserChangedRoute(route), _ -> #(
-      Model(..model, page: init_route(route)),
-      effect.none(),
-    )
-    Contact(msg), ContactPage -> {
-      contact.update(msg)
-      // TODO: I dont love this but it works, I need to refactor later
-      #(model, toast.toast("Copied!"))
-    }
-    UserToggledColourMode, _ -> #(
-      Model(..model, colour_mode: case model.colour_mode {
+  case msg {
+    UserToggledColourMode -> #(
+      Model(colour_mode: case model.colour_mode {
         Light | System(False) -> {
           styles.set_attribute("data-theme", "dark")
           Dark
@@ -107,7 +50,11 @@ fn update(model: Model, msg: Msg) -> #(Model, Effect(Msg)) {
       }),
       effect.none(),
     )
-    _, _ -> panic as "what the fuck"
+    UserPressedEmail -> {
+      contact.write_text("oslewei.proton.me")
+      #(model, effect.none())
+    }
+    _ -> panic as "what the fuck"
   }
 }
 
@@ -134,10 +81,10 @@ fn navbar(model: Model) -> Element(Msg) {
     ]),
     [],
     [
-      html.a_([router.href(router.Home)], [html.text("home")]),
-      html.a_([router.href(router.Projects)], [html.text("projects")]),
-      html.a_([router.href(router.About)], [html.text("about")]),
-      html.a_([router.href(router.Contact)], [html.text("contact")]),
+      html.a_([attribute.href("'home")], [html.text("home")]),
+      html.a_([attribute.href("#projects")], [html.text("projects")]),
+      html.a_([attribute.href("#about")], [html.text("about")]),
+      html.a_([attribute.href("#contact")], [html.text("contact")]),
       light_mode_button(model),
     ],
   )
@@ -145,16 +92,23 @@ fn navbar(model: Model) -> Element(Msg) {
 
 fn view(model: Model, stylesheet: sketch.StyleSheet) -> Element(Msg) {
   use <- sketch_lustre.render(stylesheet, [sketch_lustre.node()])
-  html.div_([], [
+  html.div(css.class([
+  ]), [], [
     navbar(model),
-
-    case model.page {
-      HomePage -> home.view()
-      ContactPage -> contact.view() |> element.map(Contact)
-      AboutPage -> about.view()
-      ProjectsPage -> projects.view()
-      NotFoundPage(uri) -> not_found_view(uri)
-    },
+    html.section_([attribute.id("home")], [
+      
+      html.h1_([], [html.text("Oscar Weimann")])
+    ]),
+    html.section_([attribute.id("projects")], [
+      
+      html.h1_([], [html.text("Projects")])
+    ]),
+    html.section_([attribute.id("about")], [
+      about.view()
+    ]),
+    html.section_([attribute.id("contact")], [
+      contact.view()
+    ]),
   ])
 }
 
