@@ -13,8 +13,7 @@ jobs:
     steps:
       - name: Checkout repo
         uses: actions/checkout@v6
-      - name: Setup config
-        run: ./scripts/gen_config_pages.sh
+        
       - name: Set up Gleam
         uses: erlef/setup-beam@v1
         with:
