@@ -1,5 +1,5 @@
 import home
-import projects/projects
+import projects
 import lustre/attribute
 import about
 import gleam/uri
@@ -101,7 +101,7 @@ fn view(model: Model, stylesheet: sketch.StyleSheet) -> Element(Msg) {
       home.view(),
     ]),
     html.section_([attribute.id("projects")], [
-      html.text("Projects"),
+      projects.view()
     ]),
     html.section_([attribute.id("about")], [
       about.view()
