@@ -21,10 +21,21 @@ jobs:
           otp-version: "29.0"
           gleam-version: "1.17.0"
           rebar3-version: "3"
-      - name: Install dependencies
-        run: gleam deps download
-      - name: Build app
-        run: gleam run -m lustre/dev build --minify --outdir=dist
+          
+      - name: Setup Node
+        run: actions/setup-node@v4
+        
+      - name: Install npm dependencies
+        run: npm ci
+
+      - name: Build
+        run: npx vite build
+        
+      # - name: Install dependencies
+      #   run: gleam deps download
+      # - name: Build app
+      #   run: gleam run -m lustre/dev build --minify --outdir=dist
+      
       - name: Setup Pages
         uses: actions/configure-pages@v5
       - name: Upload artifact

@@ -1,4 +1,3 @@
-<!--This is only for deployment to github pages-->
 <!DOCTYPE html>
 <html>
     <head>
@@ -6,15 +5,9 @@
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
         <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wght@0,100..700;1,100..700&display=swap" rel="stylesheet">
         <title>Oscar Weimann</title>
-        <script src="/portfolio.js" type="module"></script>
-        <script>
-          (function() {
-            const params = new URLSearchParams(window.location.search);
-            const path = params.get('path');
-            if (path) {
-              window.history.replaceState(null, null, path);
-            }
-          })();
+        <script type="module">
+          import {main} from "/src/projects/projects.gleam"
+          main()
         </script>
     </head>
     <body>

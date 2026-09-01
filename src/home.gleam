@@ -9,9 +9,7 @@ pub fn view() -> Element(a) {
     html.h1_([], [html.text("Oscar Weimann")]),
     html.div_([], [
       html.a_([attribute.href("https://github.com/oslewei")], [icons.github()]),
+      html.a_([], []),
     ]),
-    // TODO: do the github and othe rprofiles: github, linkedin
-    // hack the box, and so on
-    html.div(css.class([]), [], []),
   ])
 }

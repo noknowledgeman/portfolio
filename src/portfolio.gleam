@@ -1,3 +1,5 @@
+import home
+import projects/projects
 import lustre/attribute
 import about
 import gleam/uri
@@ -96,12 +98,10 @@ fn view(model: Model, stylesheet: sketch.StyleSheet) -> Element(Msg) {
   ]), [], [
     navbar(model),
     html.section_([attribute.id("home")], [
-      
-      html.h1_([], [html.text("Oscar Weimann")])
+      home.view(),
     ]),
     html.section_([attribute.id("projects")], [
-      
-      html.h1_([], [html.text("Projects")])
+      html.text("Projects"),
     ]),
     html.section_([attribute.id("about")], [
       about.view()

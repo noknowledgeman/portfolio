@@ -1,0 +1,23 @@
+{
+  "name": "portfolio",
+  "version": "1.0.0",
+  "description": "Programming portfolio",
+  "homepage": "https://github.com/oslewei/portfolio#readme",
+  "bugs": {
+    "url": "https://github.com/oslewei/portfolio/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/oslewei/portfolio.git"
+  },
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "run": "vite"
+  },
+  "devDependencies": {
+    "vite": "^8.2.2",
+    "vite-gleam": "^1.7.1"
+  }
+}
