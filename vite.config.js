@@ -8,12 +8,10 @@ export default defineConfig({
   ],
   input: {
     main: resolve(__dirname, "index.html"),
-    // projects: resolve(__dirname, "projects.html"),
+    raytracing: resolve(__dirname, "raytracing.html"),
+    ai: resolve(__dirname, "ai.html")
   },
   build: {
     outDir: "dist",
-    rollDownOptions: {
-      
-    },
   },
 });
