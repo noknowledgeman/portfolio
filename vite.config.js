@@ -6,8 +6,10 @@ export default defineConfig({
   plugins: [gleam()],
   build: {
     rollupOptions: {
-      main: resolve(__dirname, "index.html"),
-      projects: resolve(__dirname, "projects.html")
-    }
-  }
-})
+      input: {
+        main: resolve(__dirname, "index.html"),
+        projects: resolve(__dirname, "projects.html"),
+      },
+    },
+  },
+});
