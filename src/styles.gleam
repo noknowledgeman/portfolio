@@ -19,6 +19,15 @@ pub const background_color = "#FAF9F6"
 
 pub const dark_background_color = "#1A1A18"
 
+pub fn section() -> css.Class {
+  css.class([
+    css.display("flex"),
+    css.flex_direction("column"),
+    css.align_items("center"),
+    css.border("solid 1px black")
+  ])
+}
+
 pub fn button() -> css.Class {
   css.class([
     css.display("inline-block"),

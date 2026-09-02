@@ -12,8 +12,8 @@ pub fn read_text() -> Promise(Result(String, String))
 @external(javascript, "./browser_ffi.mjs", "writeText")
 pub fn write_text(clip_text: String) -> Promise(Result(Nil, String))
 
-pub fn view() -> Element(Msg) {
-  html.div_([], [
+pub fn view() -> List(Element(Msg)) {
+  [
     html.h1_([], [html.text("Contact")]),
     html.p_([], [
       html.text("Email: "),
@@ -25,5 +25,5 @@ pub fn view() -> Element(Msg) {
         ],
       ),
     ]),
-  ])
+  ]
 }

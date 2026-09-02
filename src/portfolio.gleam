@@ -1,4 +1,3 @@
-import sketch/css/length
 import about
 import contact
 import gleam/uri
@@ -14,6 +13,7 @@ import lustre/event
 import projects
 import sketch
 import sketch/css
+import sketch/css/length
 import sketch/lustre as sketch_lustre
 import sketch/lustre/element/html
 import styles
@@ -85,11 +85,10 @@ fn navbar(model: Model) -> Element(Msg) {
       css.z_index(100),
       css.background(styles.background_color),
       css.border_bottom("solid 1px black"),
-
     ]),
     [],
     [
-      html.a(styles.button(), [attribute.href("'home")], [html.text("home")]),
+      html.a(styles.button(), [attribute.href("#home")], [html.text("home")]),
       html.a(styles.button(), [attribute.href("#projects")], [
         html.text("projects"),
       ]),
@@ -106,12 +105,10 @@ fn view(model: Model, stylesheet: sketch.StyleSheet) -> Element(Msg) {
   use <- sketch_lustre.render(stylesheet, [sketch_lustre.node()])
   html.div(css.class([]), [], [
     navbar(model),
-    html.section_([attribute.id("home")], [
-      home.view(),
-    ]),
-    html.section_([attribute.id("projects")], [projects.view()]),
-    html.section_([attribute.id("about")], [about.view()]),
-    html.section_([attribute.id("contact")], [contact.view()]),
+    html.section(styles.section(), [attribute.id("home")], home.view()),
+    html.section(styles.section(), [attribute.id("projects")], projects.view()),
+    html.section(styles.section(), [attribute.id("about")], about.view()),
+    html.section(styles.section(), [attribute.id("contact")], contact.view()),
   ])
 }
 

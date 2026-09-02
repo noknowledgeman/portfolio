@@ -1,3 +1,4 @@
+import shared
 import sketch/lustre/element/html
 import sketch
 import lustre/effect.{type Effect}
@@ -24,7 +25,10 @@ pub fn update(model: Model, _msg: Msg) -> #(Model, Effect(Msg)) {
 
 pub fn view(_model: Model, stylesheet: sketch.StyleSheet) -> Element(Msg) {
   use <- sketch_lustre.render(stylesheet, [sketch_lustre.node()])
-  html.div_([], [html.h1_([], [html.text("Hello World")])])
+  html.div_([], [
+    html.h1_([], [html.text("Deep Learning in C")]),
+    html.p_([], [html.text(shared.lorem_ipsum(2, "paragraphs"))])
+  ])
 }
 
 pub fn main() {
