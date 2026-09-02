@@ -1,3 +1,4 @@
+import sketch/css/length
 
 pub type ColourMode {
   // lazy but true is dark and false is light
@@ -14,6 +15,10 @@ pub type Msg {
   UserToggledColourMode
   UserPressedEmail
   SystemThemeChanged(is_dark: Bool)
+}
+
+pub fn zero() {
+  length.cm(0)
 }
 
 @external(javascript, "./browser_ffi.mjs", "loremIpsumGleam")

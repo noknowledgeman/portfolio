@@ -1,24 +1,27 @@
-import home
-import projects
-import lustre/attribute
+import sketch/css/length
 import about
+import contact
 import gleam/uri
 import grille_pain
+import grille_pain/lustre/toast
+import home
 import lucide_lustre
 import lustre
+import lustre/attribute
 import lustre/effect.{type Effect}
 import lustre/element.{type Element}
 import lustre/event
+import projects
 import sketch
 import sketch/css
 import sketch/lustre as sketch_lustre
 import sketch/lustre/element/html
 import styles
-import contact
 
-import shared.{type Msg, type Model, 
-  SystemThemeChanged, Model, System, UserToggledColourMode, Light, Dark, UserPressedEmail}
-
+import shared.{
+  type Model, type Msg, Dark, Light, Model, System, SystemThemeChanged,
+  UserPressedEmail, UserToggledColourMode,
+}
 
 fn watch_scheme() -> Effect(Msg) {
   effect.from(fn(dispatch) {
@@ -54,7 +57,7 @@ fn update(model: Model, msg: Msg) -> #(Model, Effect(Msg)) {
     )
     UserPressedEmail -> {
       contact.write_text("oslewei.proton.me")
-      #(model, effect.none())
+      #(model, toast.toast("Copied Email!"))
     }
     _ -> panic as "what the fuck"
   }
@@ -72,17 +75,28 @@ fn light_mode_button(model: Model) -> Element(Msg) {
 fn navbar(model: Model) -> Element(Msg) {
   html.nav(
     css.class([
+      css.width(length.vw(100)),
       css.display("flex"),
       css.flex_direction("row"),
       css.justify_content("space-between"),
       css.align_items("center"),
+      css.position("sticky"),
+      css.top(length.px(0)),
+      css.z_index(100),
+      css.background(styles.background_color),
+      css.border_bottom("solid 1px black"),
+
     ]),
     [],
     [
-      html.a_([attribute.href("'home")], [html.text("home")]),
-      html.a_([attribute.href("#projects")], [html.text("projects")]),
-      html.a_([attribute.href("#about")], [html.text("about")]),
-      html.a_([attribute.href("#contact")], [html.text("contact")]),
+      html.a(styles.button(), [attribute.href("'home")], [html.text("home")]),
+      html.a(styles.button(), [attribute.href("#projects")], [
+        html.text("projects"),
+      ]),
+      html.a(styles.button(), [attribute.href("#about")], [html.text("about")]),
+      html.a(styles.button(), [attribute.href("#contact")], [
+        html.text("contact"),
+      ]),
       light_mode_button(model),
     ],
   )
@@ -90,21 +104,14 @@ fn navbar(model: Model) -> Element(Msg) {
 
 fn view(model: Model, stylesheet: sketch.StyleSheet) -> Element(Msg) {
   use <- sketch_lustre.render(stylesheet, [sketch_lustre.node()])
-  html.div(css.class([
-  ]), [], [
+  html.div(css.class([]), [], [
     navbar(model),
     html.section_([attribute.id("home")], [
       home.view(),
     ]),
-    html.section_([attribute.id("projects")], [
-      projects.view()
-    ]),
-    html.section_([attribute.id("about")], [
-      about.view()
-    ]),
-    html.section_([attribute.id("contact")], [
-      contact.view()
-    ]),
+    html.section_([attribute.id("projects")], [projects.view()]),
+    html.section_([attribute.id("about")], [about.view()]),
+    html.section_([attribute.id("contact")], [contact.view()]),
   ])
 }
 

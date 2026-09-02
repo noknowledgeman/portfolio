@@ -1,9 +1,10 @@
 //// global styles
 
-import sketch/css/length
-import sketch/css/media
+import shared.{zero}
 import sketch
 import sketch/css
+import sketch/css/length
+import sketch/css/media
 
 @external(javascript, "./browser_ffi.mjs", "setAttribute")
 pub fn set_attribute(attrib: String, state: String) -> Nil
@@ -14,9 +15,30 @@ pub fn prefers_dark() -> Bool
 @external(javascript, "./browser_ffi.mjs", "onSchemeChange")
 pub fn on_scheme_change(callback: fn(Bool) -> Nil) -> Nil
 
-const background_color = "#FAF9F6"
+pub const background_color = "#FAF9F6"
 
-const dark_background_color = "#1A1A18"
+pub const dark_background_color = "#1A1A18"
+
+pub fn button() -> css.Class {
+  css.class([
+    css.display("inline-block"),
+    css.padding_left(length.rem(1.5)),
+    css.padding_right(length.rem(1.5)),
+    css.padding_top(length.rem(0.75)),
+    css.padding_bottom(length.rem(0.75)),
+    css.font_weight("500"),
+    css.text_align("center"),
+    css.transition("background-color 0.2s ease"),
+    css.border("1px solid transparent"),
+
+    css.hover([
+      css.background_color("#1d4ed8"),
+      css.border_color("black"),
+    ]),
+
+    css.active([css.background_color("#1e40af")]),
+  ])
+}
 
 pub fn global(stylesheet: sketch.StyleSheet) -> sketch.StyleSheet {
   stylesheet
@@ -26,25 +48,30 @@ pub fn global(stylesheet: sketch.StyleSheet) -> sketch.StyleSheet {
       css.scroll_behavior("smooth"),
       css.background_color(background_color),
       css.media(media.dark_theme(), [
-        css.background_color(dark_background_color)
-      ])
+        css.background_color(dark_background_color),
+      ]),
+    ]),
+  )
+  |> sketch.global(css.global("body", [
+    css.overflow_x("hidden"),
+    css.margin(zero()),
+    css.padding(zero()),
+  ]))
+  |> sketch.global(
+    css.global("[data-theme=\"dark\"]", [
+      css.background_color(dark_background_color),
     ]),
   )
   |> sketch.global(
-    css.global("[data-theme=\"dark\"]", [
-      css.background_color(dark_background_color)
-    ])
-  )
-  |> sketch.global(
     css.global("[data-theme=\"light\"]", [
-      css.background_color(background_color)
-    ])
+      css.background_color(background_color),
+    ]),
   )
   |> sketch.global(
     css.global("section", [
       css.height(length.vh(100)),
       css.display("flex"),
-      css.justify_content("center")
-    ])
+      css.justify_content("center"),
+    ]),
   )
 }
