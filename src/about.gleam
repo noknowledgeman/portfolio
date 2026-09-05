@@ -12,7 +12,7 @@ pub fn view() -> List(Element(message)) {
       <> " on cybersecurity and backend development")]),
     html.a(
       styles.button(),
-      [attribute.download("OscarWeimannCV.pdf"), attribute.href("../public/OscarWeimannCV.pdf")],
+      [attribute.download("OscarWeimannCV.pdf"), attribute.href("OscarWeimannCV.pdf")],
       [html.text("My CV")],
     ),
   ]
